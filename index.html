@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="navbar" id="navbar">
+                <ul>
+                    <li><a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#income"><i class="fas fa-money-bill-wave"></i> Income</a></li>
+                    <li><a href="#expenses"><i class="fas fa-receipt"></i> Expenses</a></li>
+                    <li><a href="#savings"><i class="fas fa-piggy-bank"></i> Savings</a></li>
+                    <li><a href="#trips"><i class="fas fa-route"></i> Trips</a></li>
+                    <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-greeting">
+                <span>Hello, <strong>John Doe</strong>!</span>
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <!-- Summary Cards -->
+            <section class="summary-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Total Income</h3>
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>$4,250.00</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 65%;"></div>
+                        </div>
+                        <p>65% of $6,500 goal</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Total Expenses</h3>
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>$1,890.00</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar expense" style="width: 47%;"></div>
+                        </div>
+                        <p>47% of $4,000 allocated</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Total Savings</h3>
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>$2,360.00</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar savings" style="width: 78%;"></div>
+                        </div>
+                        <p>78% of $3,000 target</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Wallet Balance</h3>
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>$1,450.00</h2>
+                        <div class="wallet-details">
+                            <div class="wallet-item">
+                                <span>Cash</span>
+                                <span>$350.00</span>
+                            </div>
+                            <div class="wallet-item">
+                                <span>Bank</span>
+                                <span>$1,100.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Secondary Metrics -->
+            <section class="secondary-metrics">
+                <div class="metric-card">
+                    <h3>Total Trips</h3>
+                    <div class="metric-value">42</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Hours</h3>
+                    <div class="metric-value">86.5</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Distance</h3>
+                    <div class="metric-value">1,245 km</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Hourly Rate</h3>
+                    <div class="metric-value">$49.13</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Earning per km</h3>
+                    <div class="metric-value">$3.41</div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <h3>Weekly Breakdown</h3>
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Recent Transactions -->
+            <section class="recent-transactions">
+                <h3>Recent Transactions</h3>
+                <div class="transactions-list">
+                    <div class="transaction-item">
+                        <div class="transaction-icon income">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Freelance Project</h4>
+                            <p>Today, 10:45 AM</p>
+                        </div>
+                        <div class="transaction-amount income">
+                            +$1,200.00
+                        </div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon expense">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Grocery Shopping</h4>
+                            <p>Yesterday, 5:30 PM</p>
+                        </div>
+                        <div class="transaction-amount expense">
+                            -$85.75
+                        </div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon expense">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Fuel</h4>
+                            <p>Yesterday, 3:15 PM</p>
+                        </div>
+                        <div class="transaction-amount expense">
+                            -$45.20
+                        </div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon income">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Client Payment</h4>
+                            <p>Mar 15, 2:00 PM</p>
+                        </div>
+                        <div class="transaction-amount income">
+                            +$750.00
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="footer-actions">
+                <button class="action-btn" id="addTrip">
+                    <i class="fas fa-plus"></i> Add Trip
+                </button>
+                <button class="action-btn" id="addExpense">
+                    <i class="fas fa-plus"></i> Add Expense
+                </button>
+                <button class="action-btn" id="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <button class="action-btn" id="reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </button>
+            </div>
+            <div class="transactions-view">
+                <h3>All Transactions</h3>
+                <div class="transactions-table">
+                    <!-- This would be populated dynamically with all transactions -->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Wallet</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Sample data would go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
