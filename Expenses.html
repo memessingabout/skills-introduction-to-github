@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker - Expenses</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
+            margin: 0 0 15px 0;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .tag-remove {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .expense-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+        
+        .expense-details {
+            flex-grow: 1;
+        }
+        
+        .expense-amount {
+            font-weight: bold;
+            margin-left: 20px;
+        }
+        
+        .frequency-options {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .day-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .day-checkbox {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-controls select, .filter-controls input {
+            width: auto;
+            min-width: 150px;
+        }
+        
+        @media (max-width: 768px) {
+            .expense-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .expense-amount {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Budget Tracker</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tab-container">
+            <div class="tab active" data-tab="current">Current Expenses</div>
+            <div class="tab" data-tab="history">History</div>
+        </div>
+        
+        <div class="tab-content active" id="current">
+            <div class="card">
+                <h2>Add New Expense</h2>
+                <form id="expense-form">
+                    <div class="form-group">
+                        <label for="expense-name">Expense Name</label>
+                        <input type="text" id="expense-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-amount">Amount</label>
+                        <input type="number" id="expense-amount" min="0" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-frequency">Frequency</label>
+                        <select id="expense-frequency" required>
+                            <option value="">Select frequency</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    
+                    <div id="custom-frequency-options" class="frequency-options">
+                        <label>Select Days</label>
+                        <div class="day-checkboxes">
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-monday" value="monday">
+                                <label for="day-monday">Monday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-tuesday" value="tuesday">
+                                <label for="day-tuesday">Tuesday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-wednesday" value="wednesday">
+                                <label for="day-wednesday">Wednesday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-thursday" value="thursday">
+                                <label for="day-thursday">Thursday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-friday" value="friday">
+                                <label for="day-friday">Friday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-saturday" value="saturday">
+                                <label for="day-saturday">Saturday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-sunday" value="sunday">
+                                <label for="day-sunday">Sunday</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-tags">Tags (comma separated)</label>
+                        <input type="text" id="expense-tags" placeholder="e.g. food, transportation, entertainment">
+                        <div class="tags-container" id="tags-preview"></div>
+                    </div>
+                    
+                    <button type="submit">Add Expense</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2>Your Expenses</h2>
+                <div class="filter-controls">
+                    <select id="filter-frequency">
+                        <option value="">All Frequencies</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    
+                    <select id="filter-tag">
+                        <option value="">All Tags</option>
+                        <!-- Tags will be populated by JavaScript -->
+                    </select>
+                    
+                    <input type="text" id="filter-search" placeholder="Search expenses...">
+                </div>
+                
+                <div id="expenses-list">
+                    <!-- Expenses will be populated by JavaScript -->
+                    <div class="expense-item">
+                        <div class="expense-details">
+                            <h3>Example Expense</h3>
+                            <div class="tags-container">
+                                <span class="tag">sample <span class="tag-remove">×</span></span>
+                            </div>
+                            <small>Weekly (Mon, Wed, Fri)</small>
+                        </div>
+                        <div class="expense-amount">$50.00</div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 65%;"></div>
+                        </div>
+                        <small>65% of budget used ($65 of $100)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="history">
+            <div class="card">
+                <h2>Expense History</h2>
+                
+                <div class="filter-controls">
+                    <input type="date" id="history-start-date">
+                    <input type="date" id="history-end-date">
+                    
+                    <select id="history-filter-tag">
+                        <option value="">All Tags</option>
+                        <!-- Tags will be populated by JavaScript -->
+                    </select>
+                    
+                    <input type="text" id="history-search" placeholder="Search history...">
+                </div>
+                
+                <div id="history-list">
+                    <!-- History will be populated by JavaScript -->
+                    <div class="history-item">
+                        <div>
+                            <strong>Example Expense</strong>
+                            <div class="tags-container">
+                                <span class="tag">sample</span>
+                            </div>
+                            <small>June 15, 2023 - Weekly</small>
+                        </div>
+                        <div>$50.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and contents
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Show/hide custom frequency options
+            const frequencySelect = document.getElementById('expense-frequency');
+            const customOptions = document.getElementById('custom-frequency-options');
+            
+            frequencySelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customOptions.style.display = 'block';
+                } else {
+                    customOptions.style.display = 'none';
+                }
+            });
+            
+            // Tag input preview
+            const tagInput = document.getElementById('expense-tags');
+            const tagsPreview = document.getElementById('tags-preview');
+            
+            tagInput.addEventListener('input', function() {
+                tagsPreview.innerHTML = '';
+                const tags = this.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'tag';
+                    tagElement.innerHTML = `${tag} <span class="tag-remove">×</span>`;
+                    tagsPreview.appendChild(tagElement);
+                });
+            });
+            
+            // Form submission (mock functionality)
+            const expenseForm = document.getElementById('expense-form');
+            expenseForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // In a real app, you would save this to a database
+                const name = document.getElementById('expense-name').value;
+                const amount = parseFloat(document.getElementById('expense-amount').value);
+                const frequency = document.getElementById('expense-frequency').value;
+                const tags = document.getElementById('expense-tags').value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                
+                let frequencyText = frequency;
+                if (frequency === 'custom') {
+                    const selectedDays = [];
+                    document.querySelectorAll('.day-checkboxes input[type="checkbox"]:checked').forEach(checkbox => {
+                        selectedDays.push(checkbox.value);
+                    });
+                    frequencyText = `Custom (${selectedDays.join(', ')})`;
+                }
+                
+                // Create new expense item
+                const expenseItem = document.createElement('div');
+                expenseItem.className = 'expense-item';
+                expenseItem.innerHTML = `
+                    <div class="expense-details">
+                        <h3>${name}</h3>
+                        <div class="tags-container">
+                            ${tags.map(tag => `<span class="tag">${tag} <span class="tag-remove">×</span></span>`).join('')}
+                        </div>
+                        <small>${frequencyText}</small>
+                    </div>
+                    <div class="expense-amount">$${amount.toFixed(2)}</div>
+                `;
+                
+                // Add to expenses list
+                const expensesList = document.getElementById('expenses-list');
+                expensesList.insertBefore(expenseItem, expensesList.firstChild);
+                
+                // Reset form
+                expenseForm.reset();
+                tagsPreview.innerHTML = '';
+                customOptions.style.display = 'none';
+                
+                // Show success message (in a real app)
+                alert('Expense added successfully!');
+            });
+            
+            // Filter functionality (mock)
+            document.getElementById('filter-search').addEventListener('input', function() {
+                // In a real app, you would filter the expenses list
+                console.log('Filtering by search:', this.value);
+            });
+            
+            document.getElementById('filter-frequency').addEventListener('change', function() {
+                // In a real app, you would filter by frequency
+                console.log('Filtering by frequency:', this.value);
+            });
+            
+            // History filter functionality (mock)
+            document.getElementById('history-search').addEventListener('input', function() {
+                // In a real app, you would filter the history list
+                console.log('Filtering history by search:', this.value);
+            });
+        });
+    </script>
+</body>
+</html>
